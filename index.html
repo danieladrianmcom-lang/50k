@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090611">
+<meta name="description" content="Acompanhe suas rotas, gastos e sua jornada até os R$ 50 mil.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Meta 50K</title>
+<style>
+:root{color-scheme:dark;--bg:#090611;--panel:#151020;--panel2:#1c142b;--purple:#a020f0;--purple2:#7100d8;--line:#38234f;--muted:#a99bb9;--green:#36df83;--red:#ff5d76}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#211033 0,#090611 48%);color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button,input,select{font:inherit}button{cursor:pointer}.app{max-width:760px;margin:auto;padding:18px 16px 100px}
+header{display:flex;align-items:center;justify-content:space-between;margin:6px 0 18px}.brand{display:flex;align-items:center;gap:11px}.brand img{width:48px;height:48px}.brand h1{font-size:23px;margin:0;font-weight:850;letter-spacing:-.7px}.brand h1 span{color:#c04aff}.sub{font-size:11px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase}
+.iconbtn{border:1px solid var(--line);background:var(--panel);color:#d9a8ff;border-radius:13px;padding:10px}
+.card{background:linear-gradient(145deg,rgba(31,19,48,.97),rgba(15,11,23,.98));border:1px solid var(--line);border-radius:20px;padding:17px;margin:13px 0;box-shadow:0 10px 28px #0005}
+.hero{border-color:#7432a1;box-shadow:0 0 24px #8c16dc24}.eyebrow{font-size:12px;color:#c8afd9;text-transform:uppercase;letter-spacing:1.3px}.goal{font-size:32px;font-weight:850;margin:7px 0 13px}.progress{height:12px;background:#34263f;border-radius:99px;overflow:hidden}.progress div{height:100%;width:0;background:linear-gradient(90deg,#7700d9,#d44dff);border-radius:99px;transition:width .25s}
+.goalrow{display:flex;justify-content:space-between;gap:8px;margin-top:10px;font-size:12px;color:var(--muted)}.goalrow strong{color:#fff}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#120d1c;border:1px solid #30203f;border-radius:16px;padding:14px}.stat small{color:var(--muted);font-size:11px}.stat strong{display:block;font-size:22px;margin-top:5px}.green{color:var(--green)}.purple{color:#c34cff}.red{color:var(--red)}
+.sectiontitle{display:flex;justify-content:space-between;align-items:center;margin:23px 2px 8px}.sectiontitle h2{font-size:16px;margin:0}.sectiontitle span{color:var(--muted);font-size:12px}
+.primary{border:0;border-radius:15px;padding:15px 18px;color:white;font-weight:750;background:linear-gradient(100deg,#7500d8,#bd24ff);box-shadow:0 7px 22px #8a00df40}.secondary{border:1px solid var(--line);background:#1b1228;color:#e7c9ff;border-radius:13px;padding:11px 13px;font-weight:650}.danger{color:#ff8294;border-color:#663043}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions button{width:100%}
+nav{position:fixed;bottom:0;left:0;right:0;background:#0c0813ed;backdrop-filter:blur(16px);border-top:1px solid #38234f;display:flex;justify-content:center;gap:4px;padding:9px 8px calc(9px + env(safe-area-inset-bottom));z-index:10}
+nav button{flex:1;max-width:150px;background:transparent;border:0;color:#9f91ac;padding:8px 2px;border-radius:12px;font-size:11px}nav button.active{color:#d15aff;background:#28123b}nav b{display:block;font-size:18px;margin-bottom:2px}
+.view{display:none}.view.active{display:block}
+label{display:block;color:#cbbbd7;font-size:12px;margin:12px 0 6px}input,select{width:100%;padding:14px;border:1px solid #49305d;border-radius:13px;background:#0e0a16;color:#fff;outline:none}input:focus,select:focus{border-color:#b33cff;box-shadow:0 0 0 3px #a020f022}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}
+.rowitem{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #2a2034}.rowitem:last-child{border:0}.rowitem small{display:block;color:var(--muted);margin-top:3px}.empty{color:var(--muted);font-size:13px;text-align:center;padding:22px}
+.monthnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.monthnav button{background:#241331;color:#d9a8ff;border:1px solid var(--line);border-radius:10px;padding:8px 12px}.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.dayname,.day{font-size:11px;text-align:center}.dayname{color:var(--muted);padding:7px 0}.day{min-height:48px;background:#100b18;border:1px solid #2a2035;border-radius:10px;padding:7px 2px;color:#eee}.day.has{border-color:#a12de2;background:#28123a}.day.today{outline:1px solid #d35aff}.day .dot{display:block;color:#c54aff;font-size:9px;margin-top:4px}
+.pill{font-size:10px;padding:4px 7px;border-radius:20px;background:#29153b;color:#d8a6ff}.note{font-size:12px;color:var(--muted);line-height:1.5}.install{display:none;width:100%;margin:8px 0}.install.show{display:block}
+@media(min-width:600px){.app{padding-top:28px}.stats{grid-template-columns:repeat(4,1fr)}.goal{font-size:38px}}
+
+.apphead{justify-content:space-between;margin:8px 0 20px}
+.brand.centered{gap:8px;justify-content:center}.brand.centered img{width:38px;height:38px}.brand.centered h1{font-size:25px}
+.target-card{position:relative;padding:20px 19px 18px;min-height:190px;background:linear-gradient(135deg,#20102f,#100b19 80%)}
+.target-icon{font-size:37px;color:#b32cff;float:left;margin:0 13px 0 0;text-shadow:0 0 20px #a020f0}
+.target-card .eyebrow{padding-top:7px;text-transform:none;font-size:14px;letter-spacing:0}
+.target-card .goal{font-size:34px;margin:3px 0 15px}
+.target-card .goalrow{font-size:13px}
+.home-stats{grid-template-columns:1fr 1fr}
+.home-stats .stat{padding:16px 13px;min-height:130px}
+.home-stats .stat strong{font-size:23px}
+.home-stats em{display:block;font-size:11px;color:var(--muted);font-style:normal;margin-top:4px}
+.stat-icon{font-size:25px;color:#b32cff;margin-bottom:6px}
+.weekly{padding:10px 16px}.weekly .rowitem{font-size:13px}.weekly .rowitem strong{font-size:14px}
+.miniweek{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:10px 0 17px}
+.mini-day{border:1px solid #3a2450;background:#130d1d;border-radius:12px;color:#eee;text-align:center;padding:10px 2px;font-size:11px}
+.mini-day strong{display:block;font-size:14px;margin:6px 0}
+.mini-day small{color:#b94bff;font-size:10px}.mini-day.today{background:linear-gradient(180deg,#9b18ed,#5e0cb2);border-color:#c85aff}
+.add-main{width:100%;padding:17px;font-size:15px}
+nav{gap:2px;padding-top:8px}
+nav button{font-size:10px}
+nav b{font-size:20px}
+@media(min-width:600px){.app{max-width:500px}.home-stats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="apphead"><button class="iconbtn" id="backupTop" aria-label="Backup">↥</button><div class="brand centered"><img src="icon.svg" alt=""><h1>Meta <span>50K</span></h1></div><button class="iconbtn" id="settingsTop" aria-label="Configurações">⚙</button></header>
+<button class="primary install" id="installBtn">＋ Instalar Meta 50K no celular</button>
+
+<section id="home" class="view active">
+ <div class="card hero target-card">
+  <div class="target-icon">◎</div><div class="eyebrow">Nossa meta</div>
+  <div class="goal">R$ 50.000,00</div>
+  <div class="progress"><div id="progressBar"></div></div>
+  <div class="goalrow"><span id="savedHero">R$ 0,00</span><span id="percent">0%</span></div>
+  <div class="goalrow"><span>Faltam</span><strong id="remaining">R$ 50.000,00</strong></div>
+ </div>
+ <div class="stats home-stats">
+  <div class="stat"><div class="stat-icon">▣</div><small>Faturamento hoje</small><strong id="todayGross">R$ 0,00</strong><em id="todayRoutes">0 / 2 rotas</em></div>
+  <div class="stat"><div class="stat-icon">♧</div><small>Patrimônio</small><strong id="savedSmall" class="green">R$ 0,00</strong><em>Guardado até agora</em></div>
+ </div>
+ <div class="sectiontitle"><h2>▥ &nbsp;Resumo da semana</h2><span id="todayDate"></span></div>
+ <div class="card weekly">
+  <div class="rowitem"><span>▦ &nbsp;Faturamento semanal</span><strong id="weekGross">R$ 0,00</strong></div>
+  <div class="rowitem"><span>♧ &nbsp;Patrimônio acumulado</span><strong id="weekSaved" class="green">R$ 0,00</strong></div>
+  <div class="rowitem"><span>♧ &nbsp;Gastos da semana</span><strong id="weekExpenses" class="red">R$ 0,00</strong></div>
+ </div>
+ <div class="sectiontitle"><h2>▦ &nbsp;Calendário</h2><span id="miniMonth"></span></div>
+ <div class="miniweek" id="miniWeek"></div>
+ <button class="primary add-main" id="quickRoute">＋ &nbsp;Adicionar lançamento</button>
+ <div class="sectiontitle"><h2>Últimos lançamentos</h2><span class="pill">Histórico</span></div>
+ <div class="card"><div id="recentList" class="empty">Nenhum lançamento ainda.</div></div>
+ <p class="note">Os gastos só são descontados quando você registra. Faça backups regularmente.</p>
+</section>
+
+<section id="entry" class="view">
+ <div class="sectiontitle"><h2>Novo lançamento</h2><span>Registro manual</span></div>
+ <div class="card">
+  <div class="formgrid">
+   <div class="full"><label>Tipo de lançamento</label><select id="entryType"><option value="route">Rota concluída (+ R$ 130)</option><option value="expense">Gasto (saída)</option><option value="income">Outra entrada</option></select></div>
+   <div><label>Valor (R$)</label><input id="entryAmount" type="number" min="0.01" step="0.01" inputmode="decimal" value="130"></div>
+   <div><label>Data</label><input id="entryDate" type="date"></div>
+   <div class="full" id="categoryWrap" style="display:none"><label>Categoria</label><select id="entryCategory"><option>Alimentação</option><option>Combustível</option><option>Manutenção</option><option>Aluguel</option><option>Contas</option><option>Outros</option></select></div>
+   <div class="full"><label>Observação (opcional)</label><input id="entryNote" type="text" maxlength="90" placeholder="Ex.: rota da manhã, gasolina..."></div>
+  </div>
+  <p class="note" id="routeHint">Valor padrão de cada rota: R$ 130. Limite de 2 rotas por dia.</p>
+  <button class="primary" id="saveEntry" style="width:100%;margin-top:10px">Salvar lançamento</button>
+ </div>
+</section>
+
+<section id="calendar" class="view">
+ <div class="sectiontitle"><h2>Calendário</h2><span>Toque em um dia para ver</span></div>
+ <div class="card"><div class="monthnav"><button id="prevMonth">‹</button><strong id="monthLabel"></strong><button id="nextMonth">›</button></div><div class="calendar" id="calendarGrid"></div></div>
+ <div class="card"><div class="sectiontitle" style="margin:0"><h2 id="selectedDateLabel">Dia selecionado</h2><span id="selectedTotal"></span></div><div id="dayDetails" class="empty">Selecione um dia.</div></div>
+</section>
+
+<section id="reports" class="view">
+ <div class="sectiontitle"><h2>Relatórios</h2><span>Resumo financeiro</span></div>
+ <div class="stats">
+  <div class="stat"><small>Faturamento total</small><strong id="totalGross">R$ 0,00</strong></div>
+  <div class="stat"><small>Gastos totais</small><strong id="totalExpenses" class="red">R$ 0,00</strong></div>
+  <div class="stat"><small>Saldo líquido</small><strong id="totalNet" class="green">R$ 0,00</strong></div>
+  <div class="stat"><small>Rotas concluídas</small><strong id="totalRoutes" class="purple">0</strong></div>
+ </div>
+ <div class="card"><div class="sectiontitle" style="margin:0 0 10px"><h2>Este mês</h2><span id="monthReport"></span></div><div class="rowitem"><span>Entradas</span><strong id="monthIncome" class="green">R$ 0,00</strong></div><div class="rowitem"><span>Despesas</span><strong id="monthExpense" class="red">R$ 0,00</strong></div><div class="rowitem"><span>Saldo do mês</span><strong id="monthNet">R$ 0,00</strong></div></div>
+ <div class="card"><h2 style="font-size:15px;margin-top:0">Como calculamos o acumulado?</h2><p class="note">O acumulado é a soma de todas as entradas menos os gastos que você registrar. Nada é descontado automaticamente. Se você já tinha dinheiro guardado antes de começar, registre como “Outra entrada”.</p></div>
+</section>
+
+<section id="settings" class="view">
+ <div class="sectiontitle"><h2>Configurações</h2><span>Seus dados</span></div>
+ <div class="card"><h2 style="font-size:15px;margin-top:0">Meta financeira</h2><label>Valor da meta (R$)</label><input id="goalInput" type="number" min="1" step="0.01" value="50000"><button class="primary" id="saveGoal" style="width:100%;margin-top:10px">Salvar meta</button></div>
+ <div class="card"><h2 style="font-size:15px;margin-top:0">Backup e restauração</h2><p class="note">Exporte seus lançamentos para um arquivo JSON. Guarde esse arquivo em local seguro e importe-o caso troque de aparelho ou precise recuperar os dados.</p><div class="actions"><button class="secondary" id="exportBtn">⇩ Exportar backup</button><button class="secondary" id="importBtn">⇧ Importar backup</button></div><input id="importFile" type="file" accept="application/json" hidden></div>
+ <div class="card"><h2 style="font-size:15px;margin-top:0">Instalação</h2><p class="note">Depois de publicar o app em um endereço HTTPS, abra-o no Chrome e toque em “Instalar”. Se o botão de instalação não aparecer, use o menu ⋮ do Chrome e escolha “Adicionar à tela inicial”.</p></div>
+ <div class="card"><button class="secondary danger" id="clearBtn" style="width:100%">Apagar todos os dados deste aparelho</button><p class="note">Atenção: esta ação não pode ser desfeita sem um backup.</p></div>
+</section>
+</div>
+<nav>
+<button class="active" data-view="home"><b>⌂</b>Início</button>
+<button data-view="reports"><b>▥</b>Faturamento</button>
+<button data-view="entry"><b>☷</b>Lançamentos</button>
+<button data-view="settings"><b>♛</b>Metas</button>
+</nav>
+<script src="app.js"></script>
+</body></html>
