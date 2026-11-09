@@ -17,7 +17,7 @@ function render(){
  $("progressBar").style.width=percent+"%";$("savedHero").textContent=money(saved);$("savedSmall").textContent=money(saved);
  $("remaining").textContent=money(Math.max(0,state.goal-saved));$("percent").textContent=percent.toFixed(1).replace(".",",")+"%";
  const t=sums(dateEntries(today()));$("todayGross").textContent=money(dateEntries(today()).filter(e=>e.type!=="expense").reduce((a,e)=>a+e.amount,0));
- $("todayRoutes").textContent=t.routes+" / "+MAX_ROUTES;$("todayExpenses").textContent=money(t.expenses);
+ $("todayRoutes").textContent=t.routes+" / "+MAX_ROUTES;
  $("todayDate").textContent=parseDate(today()).toLocaleDateString("pt-BR",{day:"2-digit",month:"short"});
  const startWeek=new Date();startWeek.setDate(startWeek.getDate()-startWeek.getDay());startWeek.setHours(0,0,0,0);
  const weekEntries=state.entries.filter(e=>parseDate(e.date)>=startWeek), ws=sums(weekEntries);
@@ -40,7 +40,7 @@ function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":
 function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));if(id==="calendar")renderCalendar();window.scrollTo(0,0)}
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
 function prepareEntry(type){$("entryType").value=type;$("entryDate").value=today();$("entryAmount").value=type==="route"?ROUTE_VALUE:"";$("entryNote").value="";$("categoryWrap").style.display=type==="expense"?"block":"none";$("routeHint").style.display=type==="route"?"block":"none";showView("entry")}
-$("quickRoute").onclick=()=>prepareEntry("route");$("quickExpense").onclick=()=>prepareEntry("expense");
+$("quickRoute").onclick=()=>prepareEntry("route");
 $("entryType").onchange=()=>{const t=$("entryType").value;$("categoryWrap").style.display=t==="expense"?"block":"none";$("routeHint").style.display=t==="route"?"block":"none";if(t==="route")$("entryAmount").value=ROUTE_VALUE};
 $("saveEntry").onclick=()=>{const type=$("entryType").value,amount=Number($("entryAmount").value),date=$("entryDate").value;if(!date||!Number.isFinite(amount)||amount<=0){alert("Informe uma data e um valor válido.");return}
  if(type==="route"&&dateEntries(date).filter(e=>e.type==="route").length>=MAX_ROUTES){alert("Você já registrou 2 rotas nesta data. O limite configurado é de 2 por dia.");return}
