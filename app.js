@@ -35,7 +35,13 @@ function render(){
  $("recentList").innerHTML=recent.length?recent.map(entryHTML).join(""):'<div class="empty">Nenhum lançamento ainda.</div>';
  renderCalendar();
 }
-function entryHTML(e){const sign=e.type==="expense"?"−":"+";const cls=e.type==="expense"?"red":"green";const name=e.type==="route"?"Rota concluída":e.type==="expense"?(e.category||"Gasto"):"Outra entrada";return `<div class="rowitem"><div><strong>${escapeHTML(name)}</strong><small>${fmtDate(e.date)}${e.note?" · "+escapeHTML(e.note):""}</small></div><strong class="${cls}">${sign} ${money(e.amount)}</strong></div>`}
+function entryHTML(e){
+ const sign=e.type==="expense"?"−":"+",cls=e.type==="expense"?"red":"green";
+ const name=e.type==="route"?"Rota concluída":e.type==="expense"?(e.category||"Gasto"):"Outra entrada";
+ // O índice aponta para o objeto exato no array original, mesmo que existam IDs repetidos.
+ const entryIndex=state.entries.indexOf(e);
+ return `<div class="rowitem"><div><strong>${escapeHTML(name)}</strong><small>${fmtDate(e.date)}${e.note?" · "+escapeHTML(e.note):""}</small></div><div style="display:flex;align-items:center;gap:9px;flex-shrink:0"><strong class="${cls}">${sign} ${money(e.amount)}</strong><button type="button" data-delete-entry="${entryIndex}" aria-label="Apagar ${escapeHTML(name)}" title="Apagar lançamento" style="border:1px solid #663043;background:#21101e;color:#ff8294;border-radius:9px;padding:7px 9px;font-size:15px;line-height:1">🗑</button></div></div>`;
+}
 function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function showView(id){document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));if(id==="calendar")renderCalendar();window.scrollTo(0,0)}
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
@@ -45,6 +51,19 @@ $("entryType").onchange=()=>{const t=$("entryType").value;$("categoryWrap").styl
 $("saveEntry").onclick=()=>{const type=$("entryType").value,amount=Number($("entryAmount").value),date=$("entryDate").value;if(!date||!Number.isFinite(amount)||amount<=0){alert("Informe uma data e um valor válido.");return}
  if(type==="route"&&dateEntries(date).filter(e=>e.type==="route").length>=MAX_ROUTES){alert("Você já registrou 2 rotas nesta data. O limite configurado é de 2 por dia.");return}
  addEntry({id:String(Date.now()),type,amount,date,category:type==="expense"?$("entryCategory").value:"",note:$("entryNote").value.trim()});alert("Lançamento salvo!");};
+
+// Exclusão individual: a confirmação protege contra toques acidentais.
+// O splice remove somente a posição selecionada e save() persiste e atualiza toda a interface.
+document.addEventListener("click",event=>{
+ const button=event.target.closest("[data-delete-entry]");
+ if(!button)return;
+ const index=Number(button.dataset.deleteEntry);
+ if(!Number.isInteger(index)||index<0||index>=state.entries.length)return;
+ if(!confirm("Deseja realmente apagar este lançamento?"))return;
+ state.entries.splice(index,1);
+ save();
+});
+
 let calDate=new Date();let selected=today();
 $("prevMonth").onclick=()=>{calDate.setMonth(calDate.getMonth()-1);renderCalendar()};$("nextMonth").onclick=()=>{calDate.setMonth(calDate.getMonth()+1);renderCalendar()};
 function renderCalendar(){const y=calDate.getFullYear(),m=calDate.getMonth(),first=new Date(y,m,1),last=new Date(y,m+1,0);$("monthLabel").textContent=first.toLocaleDateString("pt-BR",{month:"long",year:"numeric"});let html=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"].map(d=>`<div class="dayname">${d}</div>`).join("");for(let i=0;i<first.getDay();i++)html+='<div></div>';for(let d=1;d<=last.getDate();d++){const key=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`,list=dateEntries(key),total=sums(list);html+=`<button class="day ${list.length?"has":""} ${key===today()?"today":""}" data-date="${key}">${d}${list.length?`<span class="dot">${total.routes?total.routes+" rota(s)": "gasto"}</span>`:""}</button>`} $("calendarGrid").innerHTML=html;document.querySelectorAll(".day[data-date]").forEach(b=>b.onclick=()=>{selected=b.dataset.date;renderDay()});renderDay()}
